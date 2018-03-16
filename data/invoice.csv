@@ -1,3 +1,7 @@
-Name,Address,State,Contact,Billing Address,Invoice No,Date,Mode of Transport,Vehicle No,Approx distance,Item,HSN,Qty,Price,CGST Rate,SGST rate, IGST Rate, CESS
-Sandeep,1273,Haryana,Sonu,bill,12,1-Mar-18,own,not provided,100,Cement,123,2,50,14,13,,
-Hooda,,,,,,,,,,ambuja,123,3,15,9,,,
+,,Haryana (06),,,,,,,,,,,,,,,,
+,,Himachal Pradesh (02),,,,,,,,,,,,,,,,
+,,Punjab (03),,,,,,,,,,,,,,,,
+,,Chandigarh (04),,,,,,,,,,,,,,,,
+Name,Address,State,Customer GSTIN,Billing Address,Invoice No,Date,Dispatch time,Mode of Transport,Vehicle No,Approx distance,Item,HSN,Qty,Price,CGST Rate,SGST rate, IGST Rate, CESS
+Sandeep,1273,Haryana (06),GST,bill,12,1-Mar-18,9:32 PM,own,not provided,100,Cement,25232930,200,250,14,14,,
+Hooda,,,,,,,,,,,ambuja,,,,,,,
