@@ -74,12 +74,12 @@ public class GenerateInvoice {
 	private InvoiceItem getInvoiceItem(String line){
 		InvoiceItem item = new InvoiceItem();
 		String[] lineExtract = line.split(",");
-		item.setItem(lineExtract[10]);
-		item.setHsn(lineExtract[11]);
-		item.setQuantity(lineExtract[12]);
+		item.setItem(lineExtract[11]);
+		item.setHsn(lineExtract[12]);
+		item.setQuantity(lineExtract[13]);
 		
 		try{
-			item.setRate(Double.parseDouble(lineExtract[13].trim()));
+			item.setRate(Double.parseDouble(lineExtract[14].trim()));
 		}catch(Exception e){
 			
 		}
@@ -90,7 +90,7 @@ public class GenerateInvoice {
 			
 		}
 		try{
-			double cgstRate = Double.parseDouble(lineExtract[14].trim());
+			double cgstRate = Double.parseDouble(lineExtract[15].trim());
 			item.setCgst(cgstRate);
 			item.setCgstApplied(item.getTaxableValue()*cgstRate/100);
 		}catch(Exception e){
@@ -98,7 +98,7 @@ public class GenerateInvoice {
 		}
 		
 		try{
-			double sgstRate = Double.parseDouble(lineExtract[15].trim());
+			double sgstRate = Double.parseDouble(lineExtract[16].trim());
 			item.setSgst(sgstRate);
 			item.setSgstApplied(item.getTaxableValue()*sgstRate/100);
 		}catch(Exception e){
@@ -106,7 +106,7 @@ public class GenerateInvoice {
 		}
 		
 		try{
-			double igstRate = Double.parseDouble(lineExtract[16].trim());
+			double igstRate = Double.parseDouble(lineExtract[17].trim());
 			item.setIgst(igstRate);
 			item.setIgstApplied(item.getTaxableValue()*igstRate/100);
 		}catch(Exception e){
@@ -114,7 +114,7 @@ public class GenerateInvoice {
 		}
 		
 		try{
-			double cessRate = Double.parseDouble(lineExtract[17].trim());
+			double cessRate = Double.parseDouble(lineExtract[18].trim());
 			item.setCess(cessRate);
 			item.setCessApplied(item.getTaxableValue()*cessRate/100);
 		}catch(Exception e){
@@ -135,7 +135,7 @@ public class GenerateInvoice {
 		aInvoice.setCustomerName(lineExtract[0]);
 		aInvoice.setShippingAddress(lineExtract[1]);
 		aInvoice.setShippingState(lineExtract[2]);
-		aInvoice.setCustomerPhone(lineExtract[3]);
+		aInvoice.setCustomerGSTIN(lineExtract[3]);
 		aInvoice.setBillingAddress(lineExtract[4]);
 		try{
 			aInvoice.setInvoiceNo(Integer.parseInt(lineExtract[5]));
@@ -147,9 +147,11 @@ public class GenerateInvoice {
 		}catch(Exception e){
 			
 		}
-		aInvoice.setModeOfTransport(lineExtract[7]);
-		aInvoice.setVehicleNo(lineExtract[8]);
-		aInvoice.setApproxDistanceKm(lineExtract[9]);
+		aInvoice.setDispatchTime(lineExtract[7]);
+		aInvoice.setModeOfTransport(lineExtract[8]);
+		aInvoice.setVehicleNo(lineExtract[9]);
+		aInvoice.setApproxDistanceKm(lineExtract[10]);
+		
 		
 		
 	}
@@ -175,7 +177,6 @@ public class GenerateInvoice {
 		registration.setPhone("+91 9216124788 / 8360743792");
 		registration.setAddress("Village Madanpur, Sector 26, Panchkula (Haryana)");
 		registration.getTermsAndConditions().add("1. Goods once sold will not be returned.");
-		registration.getTermsAndConditions().add( "2. All disputes, if any are subject to Panchkula Jurisdiction only.");
 		registration.getTermsAndConditions().add( "2. All disputes, if any are subject to Panchkula Jurisdiction only.");
 		registration.getTermsAndConditions().add(  "3. Interest will be charged @ 18% p.a. if payment is not made within 4 days.");
 		registration.getTermsAndConditions().add(  "4. Please note cheque/DD should be made in favour of MAHADEV TRADERS");

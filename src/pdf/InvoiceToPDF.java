@@ -16,7 +16,7 @@ import com.itextpdf.text.pdf.CMYKColor;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfWriter;
 
-
+import util.EnglishNumberToWords;
 import vo.InvoiceDetails;
 import vo.InvoiceItem;
 import vo.Registration;
@@ -27,9 +27,9 @@ public class InvoiceToPDF {
 	 private int pageNumber = 0;
      private int penPosY = 0;
      private int lineHeight = 15;
-     private int itemWidth = 130;
-     private int hsnWidth = 50;
-     private int qtyWidth = 20;
+     private int itemWidth = 100;
+     private int hsnWidth = 60;
+     private int qtyWidth = 50;
      private int priceWidth = 55;
      private int taxableWidth = 55;
      private int taxWidth = 45;
@@ -123,6 +123,7 @@ public class InvoiceToPDF {
 		   createHeadings(cb,422,720,"Mode of Transport:");
 		   createHeadings(cb,422,710,"Vehicle No:");
 		   createHeadings(cb,422,700,"Approx distance (KM):");
+		   createHeadings(cb,422,690,"Dispatch time:");
 		   
 		   //createHeadings(cb,422,703,"");
 
@@ -149,7 +150,7 @@ public class InvoiceToPDF {
 		   cb.moveTo(headingX-marginLeft,verticalLineEnd);
 		   cb.lineTo(headingX-marginLeft,verticalLineStart);
 		   headingX += hsnWidth;
-		   createHeadings(cb,headingX,headingY,"Qty");
+		   createHeadings(cb,headingX,headingY,"Qty (Bag)");
 		   cb.moveTo(headingX-marginLeft,verticalLineEnd);
 		   cb.lineTo(headingX-marginLeft,verticalLineStart);
 		   headingX += qtyWidth;
@@ -250,7 +251,7 @@ public class InvoiceToPDF {
 			 int totalPosY = 155;
 			 int totalPosX = 25;
 			 createHeadings(cb,totalPosX,totalPosY,"Total");
-			 totalPosX = 280;
+			 totalPosX = 300;
 			 createHeadings(cb,totalPosX,totalPosY,df.format(totalTaxable));
 			 totalPosX += taxableWidth;
 			 createHeadings(cb,totalPosX,totalPosY,df.format(totalCgst));
@@ -262,18 +263,26 @@ public class InvoiceToPDF {
 			 createHeadings(cb,totalPosX,totalPosY,df.format(totalCess));
 			 totalPosX += cessWidth;
 			 createHeadings(cb,totalPosX,totalPosY,df.format(totalInvoice));
+			 String totalValue = df.format(totalInvoice);
+			 String totalValueWhole = totalValue.substring(0,totalValue.indexOf("."));
+			 String totalValuePaisa = totalValue.substring((totalValue.indexOf(".")+1));
+			 totalValueWhole = totalValueWhole.replaceAll(",", "");
+			 String amountInWords = EnglishNumberToWords.convert(Long.parseLong(totalValueWhole))+" Rupees and "+EnglishNumberToWords.convert(Long.parseLong(totalValuePaisa))+" Paisa";
+			 amountInWords = amountInWords.replaceAll(", +Rupees", " Rupees");
+			 System.out.println(amountInWords);
+			createHeadings(cb,25,135,"Amount in words: "+amountInWords,10);
 		 }
 		 private void generateHeader(Document doc, PdfContentByte cb, InvoiceDetails invoiceDetails, Registration registration)  {
 
 		  try {
 		   int registerationDetailsX = 130;
-		   createHeadings(cb,registerationDetailsX,760,registration.getbName());
-		   createHeadings(cb,registerationDetailsX,750,registration.getAddress());
-		   createHeadings(cb,registerationDetailsX,740,"GSTIN: "+registration.getGSTIN());
-		   createHeadings(cb,registerationDetailsX,730,"State: "+registration.getState());
-		   createHeadings(cb,registerationDetailsX,720,"PAN: "+registration.getPan());
-		   createHeadings(cb,registerationDetailsX,710,"Phone: "+registration.getPhone());
-		   createHeadings(cb,registerationDetailsX,700,"Email: "+registration.getEmail());
+		   createHeadings(cb,registerationDetailsX,760,registration.getbName(),10);
+		   createHeadings(cb,registerationDetailsX,750,registration.getAddress(),10);
+		   createHeadings(cb,registerationDetailsX,740,"GSTIN: "+registration.getGSTIN(),10);
+		   createHeadings(cb,registerationDetailsX,730,"State: "+registration.getState(),10);
+		   createHeadings(cb,registerationDetailsX,720,"PAN: "+registration.getPan(),10);
+		   createHeadings(cb,registerationDetailsX,710,"Phone: "+registration.getPhone(),10);
+		   createHeadings(cb,registerationDetailsX,700,"Email: "+registration.getEmail(),10);
 		   
 		   
 		  
@@ -282,6 +291,7 @@ public class InvoiceToPDF {
 		   createHeadings(cb,510,720,invoiceDetails.getModeOfTransport());
 		   createHeadings(cb,510,710,invoiceDetails.getVehicleNo());
 		   createHeadings(cb,510,700,invoiceDetails.getApproxDistanceKm());
+		   createHeadings(cb,510,690,invoiceDetails.getDispatchTime());
 		   CMYKColor magentaColor = new CMYKColor(0.f, 1.f, 0.f, 0.f);
 		   cb.setColorStroke(magentaColor);
 		   cb.setLineWidth(1f);
@@ -298,7 +308,7 @@ public class InvoiceToPDF {
 		   createHeadings(cb,customerDetailsX,660,"Customer Name: "+invoiceDetails.getCustomerName());
 		   createHeadings(cb,customerDetailsX,650,"Shipping Address: "+invoiceDetails.getShippingAddress());
 		   createHeadings(cb,customerDetailsX,640,"State: "+invoiceDetails.getShippingState());
-		   createHeadings(cb,customerDetailsX,630,"Contact: "+invoiceDetails.getCustomerPhone() +" "+invoiceDetails.getCustomerEmail());
+		   createHeadings(cb,customerDetailsX,630,"GSTIN No: "+invoiceDetails.getCustomerGSTIN());
 		   createHeadings(cb,customerDetailsX,620,"Billing Address: "+invoiceDetails.getBillingAddress());
 		   
 		   cb.moveTo(20,610);
@@ -383,13 +393,20 @@ public class InvoiceToPDF {
 		 private void createHeadings(PdfContentByte cb, float x, float y, String text){
 
 
-		  cb.beginText();
-		  cb.setFontAndSize(bfBold, 8);
-		  cb.setTextMatrix(x,y);
-		  cb.showText(text.trim());
-		  cb.endText(); 
+			 createHeadings( cb,  x,  y,  text, 8);
 
 		 }
+		 
+		 private void createHeadings(PdfContentByte cb, float x, float y, String text, int fontSize){
+
+
+			  cb.beginText();
+			  cb.setFontAndSize(bfBold, fontSize);
+			  cb.setTextMatrix(x,y);
+			  cb.showText(text.trim());
+			  cb.endText(); 
+
+			 }
 		 
 		 private void  printTermsAndConditions(PdfContentByte cb,  List<String> termsAndConditions){
 			 cb.beginText();

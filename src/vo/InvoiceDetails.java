@@ -26,8 +26,9 @@ public class InvoiceDetails {
 	private String modeOfTransport ="";
 	private String vehicleNo ="";
 	private String approxDistanceKm ="";
+	private String dispatchTime ="";
 	private String invoiceDateFormatted;
-	
+	private String customerGSTIN ="";
 	public long getInvoiceTime() {
 		return invoiceTime;
 	}
@@ -142,6 +143,18 @@ public class InvoiceDetails {
 	}
 	public void setVehicleNo(String vehicleNo) {
 		this.vehicleNo = vehicleNo;
+	}
+	public String getCustomerGSTIN() {
+		return customerGSTIN;
+	}
+	public void setCustomerGSTIN(String customerGSTIN) {
+		this.customerGSTIN = customerGSTIN;
+	}
+	public String getDispatchTime() {
+		return dispatchTime;
+	}
+	public void setDispatchTime(String dispatchTime) {
+		this.dispatchTime = dispatchTime;
 	}
 	
 	
